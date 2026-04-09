@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signatures Email — Deskeo</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F4F2EE;
+  --bg2: #FFFFFF;
+  --bg3: #F4F2EE;
+  --bg4: #EAE8E3;
+  --border: #DDD9D2;
+  --border2: #C8C4BB;
+  --violet: #2B5BA8;
+  --violet-lt: rgba(43,91,168,.10);
+  --violet-md: #3D6FBF;
+  --cyan: #0891B2;
+  --cyan-lt: rgba(8,145,178,.1);
+  --rose: #E11D48;
+  --rose-lt: rgba(225,29,72,.1);
+  --emerald: #059669;
+  --emerald-lt: rgba(5,150,105,.1);
+  --amber: #B45309;
+  --amber-lt: rgba(180,83,9,.1);
+  --text: #1C1814;
+  --text2: #4A443E;
+  --text3: #8C857D;
+  --white: #FFFFFF;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* ── HEADER ── */
+.hdr {
+  height: 52px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px;
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+}
+.hdr-left { display: flex; align-items: center; gap: 12px; }
+.hdr-logo { display: flex; align-items: center; gap: 8px; }
+.logo-icon {
+  width: 26px; height: 26px;
+  background: linear-gradient(135deg, var(--violet), var(--cyan));
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; color: #fff;
+}
+.logo-name { font-size: 14px; font-weight: 700; color: var(--text); }
+.hdr-sep { width: 1px; height: 18px; background: var(--border2); }
+.hdr-subtitle { font-size: 12px; color: var(--text3); font-weight: 500; }
+.hdr-right { display: flex; gap: 8px; align-items: center; }
+
+/* ── BTNS ── */
+.btn {
+  padding: 7px 16px; border-radius: 7px; border: none;
+  font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 700;
+  cursor: pointer; transition: all .15s; letter-spacing: .01em;
+}
+.btn-violet { background: var(--violet); color: #fff; }
+.btn-violet:hover { background: var(--violet-md); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(124,92,252,.4); }
+.btn-ghost { background: transparent; color: var(--text2); border: 1px solid var(--border2); }
+.btn-ghost:hover { color: var(--text); border-color: var(--violet); }
+.btn-copy { background: var(--bg4); color: var(--text2); border: 1px solid var(--border2); }
+.btn-copy:hover { background: var(--emerald-lt); color: var(--emerald); border-color: var(--emerald); }
+.btn-sm { padding: 5px 10px; font-size: 11px; }
+.btn-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; cursor: pointer; border: 1px solid var(--border2); background: var(--bg3); color: var(--text2); transition: all .15s; }
+.btn-icon:hover { border-color: var(--violet); color: var(--violet); }
+.btn-icon.active { background: var(--violet-lt); border-color: var(--violet); color: var(--violet); }
+
+/* ── LAYOUT ── */
+.app {
+  display: grid;
+  grid-template-columns: 280px 380px 1fr;
+  align-items: start;
+  margin-top: 52px;
+}
+
+/* ── LEFT — TEMPLATES ── */
+.col-templates {
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  padding: 12px;
+  position: sticky;
+  top: 52px;
+  max-height: calc(100vh - 52px);
+  overflow-y: auto;
+}
+.col-title {
+  font-size: 10px; font-weight: 700; color: var(--text3);
+  text-transform: uppercase; letter-spacing: .1em;
+  margin-bottom: 12px; padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* TEMPLATE CARDS */
+.tpl-card {
+  border: 1.5px solid var(--border);
+  border-radius: 10px; overflow: hidden;
+  cursor: pointer; transition: all .2s; margin-bottom: 10px;
+  background: var(--bg3);
+}
+.tpl-card:hover { border-color: var(--violet); transform: translateY(-1px); }
+.tpl-card.active { border-color: var(--violet); box-shadow: 0 0 0 3px var(--violet-lt); }
+.tpl-preview { padding: 10px; background: #fff; min-height: 80px; overflow: hidden; }
+.tpl-preview-inner { transform: scale(0.42); transform-origin: top left; width: 238%; pointer-events: none; }
+.tpl-name {
+  padding: 8px 12px; font-size: 11px; font-weight: 700; color: var(--text2);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.tpl-badge { padding: 2px 7px; border-radius: 10px; font-size: 10px; font-weight: 700; background: var(--violet-lt); color: var(--violet); }
+
+/* ── CENTER — EDITOR ── */
+.col-editor {
+  background: var(--bg);
+  padding: 24px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.editor-section {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden;
+}
+.es-header {
+  padding: 12px 16px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.es-title { font-size: 11px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: .08em; display: flex; align-items: center; gap: 8px; }
+.es-dot { width: 6px; height: 6px; border-radius: 50%; }
+.es-body { padding: 16px; }
+
+/* FORM */
+.fg { margin-bottom: 12px; }
+.fg:last-child { margin-bottom: 0; }
+.fg label { display: block; font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 5px; }
+.fg input, .fg select, .fg textarea {
+  width: 100%; padding: 8px 12px;
+  border: 1.5px solid var(--border); border-radius: 8px;
+  font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px;
+  color: var(--text); background: var(--bg3);
+  outline: none; transition: border-color .15s;
+}
+.fg input:focus, .fg select:focus, .fg textarea:focus { border-color: var(--violet); background: var(--bg4); }
+.fg select option { background: var(--bg3); }
+.fg-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.fg-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+/* COLOR PICKER */
+.color-row { display: flex; align-items: center; gap: 10px; }
+.color-swatch {
+  width: 36px; height: 36px; border-radius: 8px;
+  border: 2px solid var(--border2); cursor: pointer;
+  transition: border-color .15s; flex-shrink: 0;
+  overflow: hidden;
+}
+.color-swatch:hover { border-color: var(--violet); }
+.color-swatch input[type=color] { width: 150%; height: 150%; border: none; padding: 0; cursor: pointer; transform: translate(-16%, -16%); }
+.color-presets { display: flex; gap: 6px; flex-wrap: wrap; }
+.cp { width: 22px; height: 22px; border-radius: 5px; cursor: pointer; border: 2px solid transparent; transition: all .15s; }
+.cp:hover, .cp.active { border-color: var(--white); transform: scale(1.15); }
+
+/* TOGGLE */
+.toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; }
+.toggle-label { font-size: 13px; color: var(--text2); }
+.toggle { position: relative; width: 36px; height: 20px; }
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-slider { position: absolute; inset: 0; background: var(--border2); border-radius: 10px; cursor: pointer; transition: .2s; }
+.toggle-slider::before { content: ''; position: absolute; width: 14px; height: 14px; left: 3px; bottom: 3px; background: var(--text3); border-radius: 50%; transition: .2s; }
+.toggle input:checked + .toggle-slider { background: var(--violet); }
+.toggle input:checked + .toggle-slider::before { transform: translateX(16px); background: #fff; }
+
+/* SOCIAL ICONS */
+.social-row { display: flex; gap: 8px; margin-top: 8px; }
+.social-chip {
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 10px; border-radius: 20px;
+  border: 1px solid var(--border2); background: var(--bg3);
+  font-size: 11px; font-weight: 600; color: var(--text3);
+  cursor: pointer; transition: all .15s;
+}
+.social-chip.on { border-color: var(--violet); color: var(--violet); background: var(--violet-lt); }
+.social-chip:hover { border-color: var(--violet); color: var(--violet); }
+
+/* ── RIGHT — PREVIEW ── */
+.col-preview {
+  background: var(--bg2);
+  border-left: 1px solid var(--border);
+  position: sticky;
+  top: 52px;
+  max-height: calc(100vh - 52px);
+  overflow-y: auto;
+  display: flex; flex-direction: column;
+}
+.preview-tabs {
+  display: flex; padding: 10px 16px; gap: 6px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg2);
+}
+.preview-tab {
+  padding: 5px 12px; border-radius: 6px; font-size: 11px; font-weight: 700;
+  cursor: pointer; transition: all .15s; color: var(--text3); background: transparent;
+  border: 1px solid transparent;
+}
+.preview-tab.active { background: var(--violet-lt); color: var(--violet); border-color: var(--violet); }
+.preview-area {
+  padding: 20px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+
+/* EMAIL MOCK */
+.email-mock {
+  background: #fff; border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4);
+  overflow: hidden;
+}
+.em-topbar {
+  background: #F6F6F6; padding: 10px 14px;
+  border-bottom: 1px solid #E8E8E8;
+  display: flex; gap: 6px;
+}
+.em-dot { width: 10px; height: 10px; border-radius: 50%; }
+.em-header {
+  padding: 12px 16px; border-bottom: 1px solid #EBEBEB;
+  font-family: Arial, sans-serif;
+}
+.em-from { font-size: 12px; color: #666; }
+.em-from b { color: #111; }
+.em-subject { font-size: 14px; font-weight: 600; color: #111; margin-top: 2px; }
+.em-body { padding: 16px; font-family: Arial, sans-serif; font-size: 13px; color: #333; line-height: 1.6; }
+.em-divider { height: 1px; background: #EBEBEB; margin: 0 16px; }
+.em-sig { padding: 14px 16px; }
+
+/* CODE VIEW */
+.code-view {
+  background: var(--bg3); border-radius: 8px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.code-header { padding: 10px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.code-label { font-size: 11px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: .08em; }
+.code-body { padding: 14px; max-height: 300px; overflow-y: auto; }
+.code-body pre { font-family: 'Courier New', monospace; font-size: 10.5px; color: var(--text2); white-space: pre-wrap; word-break: break-all; line-height: 1.6; }
+
+/* INSTRUCTIONS */
+.install-card {
+  background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 14px;
+}
+.install-title { font-size: 11px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 10px; }
+.install-step {
+  display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-start;
+}
+.install-num {
+  width: 20px; height: 20px; border-radius: 50%; background: var(--violet); color: #fff;
+  font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
+}
+.install-text { font-size: 12px; color: var(--text2); line-height: 1.5; }
+.install-text b { color: var(--text); }
+
+/* TOAST */
+.toast {
+  position: fixed; bottom: 20px; right: 20px; z-index: 999;
+  background: var(--emerald); color: #fff;
+  padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 600;
+  transform: translateY(60px); opacity: 0; transition: all .25s;
+  box-shadow: 0 4px 20px rgba(52,211,153,.4);
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+::-webkit-scrollbar-track { background: var(--bg3); }
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast">✓ Copié dans le presse-papiers</div>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-left">
+    <div class="hdr-logo">
+      <div class="logo-icon">D</div>
+      <div class="logo-name">Deskeo</div>
+    </div>
+    <div class="hdr-sep"></div>
+    <div class="hdr-subtitle">Générateur de Signatures Email</div>
+  </div>
+  <div class="hdr-right">
+    <button class="btn btn-ghost" onclick="resetForm()">↺ Reset</button>
+    <button class="btn btn-copy" onclick="copyHTML()">⎘ Copier HTML</button>
+    <button class="btn btn-violet" onclick="copySig()">✦ Copier la signature</button>
+  </div>
+</header>
+
+<!-- APP -->
+<div class="app">
+
+  <!-- ═══ TEMPLATES ═══ -->
+  <div class="col-templates">
+    <div class="col-title">Templates</div>
+    <div id="tpl-list"></div>
+  </div>
+
+  <!-- ═══ ÉDITEUR ═══ -->
+  <div class="col-editor">
+
+    <!-- Identité -->
+    <div class="editor-section">
+      <div class="es-header">
+        <div class="es-title"><div class="es-dot" style="background:var(--violet)"></div>Identité</div>
+      </div>
+      <div class="es-body">
+        <div class="fg-2">
+          <div class="fg"><label>Prénom</label><input id="f-prenom" type="text" value="Marie" oninput="render()" /></div>
+          <div class="fg"><label>Nom</label><input id="f-nom" type="text" value="Dupont" oninput="render()" /></div>
+        </div>
+        <div class="fg"><label>Titre / Poste</label><input id="f-poste" type="text" value="Responsable de Site" oninput="render()" /></div>
+        <div class="fg"><label>Entreprise</label><input id="f-company" type="text" value="Deskeo" oninput="render()" /></div>
+      </div>
+    </div>
+
+    <!-- Coordonnées -->
+    <div class="editor-section">
+      <div class="es-header">
+        <div class="es-title"><div class="es-dot" style="background:var(--cyan)"></div>Coordonnées</div>
+      </div>
+      <div class="es-body">
+        <div class="fg"><label>Email</label><input id="f-email" type="email" value="m.dupont@deskeo.fr" oninput="render()" /></div>
+        <div class="fg-2">
+          <div class="fg"><label>Téléphone direct</label><input id="f-tel" type="text" value="+33 1 23 45 67 89" oninput="render()" /></div>
+          <div class="fg"><label>Mobile</label><input id="f-mobile" type="text" value="" oninput="render()" placeholder="Optionnel" /></div>
+        </div>
+        <div class="fg"><label>Site web</label><input id="f-website" type="text" value="www.deskeo.fr" oninput="render()" /></div>
+        <div class="fg"><label>Adresse</label><input id="f-adresse" type="text" value="35 rue du Sentier, 75002 Paris" oninput="render()" /></div>
+      </div>
+    </div>
+
+    <!-- Réseaux sociaux -->
+    <div class="editor-section">
+      <div class="es-header">
+        <div class="es-title"><div class="es-dot" style="background:var(--rose)"></div>Réseaux sociaux</div>
+      </div>
+      <div class="es-body">
+        <div class="social-row" id="social-toggles"></div>
+        <div id="social-inputs" style="margin-top:12px;display:flex;flex-direction:column;gap:10px;"></div>
+      </div>
+    </div>
+
+
+
+
+
+    <!-- Mentions légales -->
+    <div class="editor-section">
+      <div class="es-header">
+        <div class="es-title"><div class="es-dot" style="background:var(--amber)"></div>Mentions légales</div>
+        <label class="toggle"><input type="checkbox" id="opt-mentions" onchange="render()"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="es-body">
+        <div class="fg"><textarea id="f-mentions" rows="3" oninput="render()" placeholder="Ce message et ses pièces jointes sont confidentiels...">Ce message et ses pièces jointes sont confidentiels et réservés à l'usage exclusif de leur destinataire. Si vous recevez ce message par erreur, merci de le signaler à l'expéditeur et de le détruire.</textarea></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══ PREVIEW ═══ -->
+  <div class="col-preview">
+    <div class="preview-tabs">
+      <div class="preview-tab active" id="tab-preview" onclick="switchTab('preview')">Aperçu email</div>
+      <div class="preview-tab" id="tab-sig" onclick="switchTab('sig')">Signature seule</div>
+      <div class="preview-tab" id="tab-code" onclick="switchTab('code')">Code HTML</div>
+      <div class="preview-tab" id="tab-install" onclick="switchTab('install')">Installation</div>
+    </div>
+    <div class="preview-area" id="preview-area"></div>
+  </div>
+
+</div>
+
+<script>
+// ── STATE ────────────────────────────────────────────────────────
+let currentTpl = 0;
+let currentTab = 'preview';
+let socials = {
+  linkedin:  { on: true,  val: 'linkedin.com/company/deskeo',    label: 'LinkedIn'  },
+  facebook:  { on: true,  val: 'facebook.com/DeskeoOffices',      label: 'Facebook'  },
+  instagram: { on: true,  val: 'instagram.com/deskeo_offices',    label: 'Instagram' },
+  youtube:   { on: true,  val: 'youtube.com/@deskeo3403',         label: 'YouTube'   },
+};
+
+// ── TEMPLATES ────────────────────────────────────────────────────
+const TEMPLATES = [
+  {
+    name: 'Générale',
+    badge: 'Deskeo',
+    build: (d) => `
+<br>
+<br>
+<table style="background:#1B1918;" border="0" cellpadding="0" cellspacing="16" width="520">
+  <tbody><tr>
+    <td style="vertical-align:middle;" width="84" align="left">
+      <span style="display:inline-block">
+        <a href="https://deskeo.com" style="display:inline-block">
+          <img src="https://s1g.s3.amazonaws.com/6edd99785fd22864e51e3b35329bac84.png" width="84" style="border:none;">
+        </a>
+      </span>
+    </td>
+    <td style="vertical-align:middle;text-align:left;color:#F0E8DC;font-size:12px;font-family:Helvetica,Arial,FreeSans,ubuntu,sans-serif;line-height:1.6em;" align="left">
+      <span>
+        <b><span style="color:#F0E8DC;font-size:14px;font-family:Helvetica,Arial,FreeSans,ubuntu,sans-serif;font-weight:600;">${d.prenom} ${d.nom}</span></b><br>
+        <span style="color:#FFF177;font-size:12px;font-family:Helvetica,Arial,FreeSans,ubuntu,sans-serif;font-weight:300;">${d.poste}${d.dept?' — '+d.dept:''}</span>
+      </span>
+      <br>
+      ${d.tel?`<span style="font:12px Helvetica,Arial,FreeSans,ubuntu,sans-serif;font-weight:300;"><a style="color:#F0E8DC;text-decoration:none;" href="tel:${d.tel}">${d.tel}</a></span><br>`:''}
+      <a style="text-decoration:none;color:#FFF177;font-weight:300;" href="https://deskeo.com">deskeo.com</a>
+      <br>
+    </td>
+    <td align="right">
+      <table border="0" cellpadding="0" cellspacing="0" width="64">
+        <tbody><tr>
+          <td>
+            <a style="display:inline-block;padding-right:4px;padding-bottom:4px;" href="https://linkedin.com/company/deskeo"><img style="border:none;" alt="LinkedIn" src="https://s1g.s3.amazonaws.com/7bb08d475c301f4f28e8dab6b3fcfcbf.png" height="32" width="32"></a>
+            <a style="display:inline-block;padding-right:4px;padding-top:4px;" href="https://facebook.com/DeskeoOffices"><img style="border:none;" alt="Facebook" src="https://s1g.s3.amazonaws.com/91e1be06e2398421f8eac43f389cf4ba.png" height="32" width="32"></a>
+          </td>
+          <td>
+            <a style="display:inline-block;padding-left:4px;padding-bottom:4px;" href="https://instagram.com/deskeo_offices"><img style="border:none;" alt="Instagram" src="https://s1g.s3.amazonaws.com/2ae92714aeae1fd43a4cb569fbdf9364.png" height="32" width="32"></a>
+            <a style="display:inline-block;padding-left:4px;padding-top:4px;" href="https://youtube.com/@deskeo3403"><img style="border:none;" alt="Youtube" src="https://s1g.s3.amazonaws.com/f3deb69421bbaa9840e5b136e6ea3b1f.png" height="32" width="32"></a>
+          </td>
+        </tr></tbody>
+      </table>
+    </td>
+  </tr></tbody>
+</table>
+${d.mentionsHTML}`
+  },
+  {
+    name: 'The Off',
+    badge: 'Filiale',
+    build: (d) => `
+<table width="520" cellspacing="32" cellpadding="0" border="0" style="background:#221d1a;">
+  <tbody><tr>
+    <td align="center" style="vertical-align:middle;" width="119">
+      <span style="display:inline-block"><img style="border:none;" width="119" src="https://www.dropbox.com/scl/fi/3rssgc73e0arfo0manidx/logo-the-off.png?rlkey=x3nltfqaq30g8sqwmkb6rkill&st=g8yqehwl&dl=1"></span>
+    </td>
+    <td style="border-left:solid #5f584d 1px;"></td>
+    <td style="vertical-align:middle;text-align:left;color:#eee2c3;font-size:12px;line-height:1.5;font-family:Helvetica,Arial,FreeSans,ubuntu,sans-serif;">
+      <span>
+        <b><span style="color:#eee2c3;font-size:14px;font-family:Helvetica,Arial,FreeSans,ubuntu,sans-serif;">${d.prenom} ${d.nom}${d.poste ? ' — ' + d.poste : ''}</span></b><br>
+        ${d.email ? '<a href="mailto:' + d.email + '" style="color:#eee2c3;font-size:12px;line-height:1.5;font-family:Helvetica,Arial,FreeSans,ubuntu,sans-serif;">' + d.email + '</a><br>' : ''}
+        ${d.tel ? '<span style="color:#eee2c3;font-size:12px;">' + d.tel + '</span>' : ''}
+      </span>
+    </td>
+    <td align="center" style="vertical-align:middle;" width="47">
+      <span style="display:inline-block"><img style="border:none;" width="47" src="https://www.dropbox.com/scl/fi/cnb6zfhyhiqajve8mp24g/keys-the-off.png?rlkey=l1mq5dznmy2u9w0nypruns4kk&st=i5k2cq1w&dl=1"></span>
+    </td>
+  </tr></tbody>
+</table>
+${d.mentionsHTML}`
+  },
+];
+
+// ── SOCIAL ───────────────────────────────────────────────────────
+function renderSocialToggles() {
+  document.getElementById('social-toggles').innerHTML = Object.entries(socials).map(([k,s])=>`
+    <div class="social-chip ${s.on?'on':''}" onclick="toggleSocial('${k}')">${s.label}</div>`).join('');
+  document.getElementById('social-inputs').innerHTML = Object.entries(socials).filter(([,s])=>s.on).map(([k,s])=>`
+    <div class="fg"><label>${s.label} — URL</label>
+      <input type="text" value="${s.val}" oninput="socials['${k}'].val=this.value;render()" placeholder="Ex: linkedin.com/company/..." />
+    </div>`).join('');
+}
+function toggleSocial(k) { socials[k].on = !socials[k].on; renderSocialToggles(); render(); }
+
+// ── COLOR PRESETS RENDER ─────────────────────────────────────────
+function renderPresets() {
+  document.getElementById('presets-primary').innerHTML = PRIMARY_PRESETS.map(c=>`
+    <div class="cp" style="background:${c}" onclick="document.getElementById('c-primary').value='${c}';render()" title="${c}"></div>`).join('');
+  document.getElementById('presets-accent').innerHTML = ACCENT_PRESETS.map(c=>`
+    <div class="cp" style="background:${c}" onclick="document.getElementById('c-accent').value='${c}';render()" title="${c}"></div>`).join('');
+}
+
+// ── TEMPLATES SIDEBAR ────────────────────────────────────────────
+function renderTemplateSidebar() {
+  const d = getData();
+  document.getElementById('tpl-list').innerHTML = TEMPLATES.map((t,i)=>`
+    <div class="tpl-card ${currentTpl===i?'active':''}" onclick="currentTpl=${i};renderTemplateSidebar();render()">
+      <div class="tpl-preview"><div class="tpl-preview-inner">${TEMPLATES[i].build(d)}</div></div>
+      <div class="tpl-name">${t.name} <span class="tpl-badge">${t.badge}</span></div>
+    </div>`).join('');
+}
+
+// ── GET DATA ─────────────────────────────────────────────────────
+function getData() {
+  const optMentions = document.getElementById('opt-mentions').checked;
+
+  // Socials object
+  const socialsObj = {};
+  Object.entries(socials).forEach(([k,s]) => { if (s.on && s.val) socialsObj[k] = s.val; });
+
+  const bannerBg = '#0F1B35'; const bannerColor = '#C8A84B';
+  const bannerText = ''; const bannerLink = 'https://deskeo.com';
+  const bannerHTML = '';
+
+  const mentionsHTML = optMentions ? `
+<div style="font-family:Helvetica,Arial,sans-serif;font-size:10px;color:#999;margin-top:12px;line-height:1.5;max-width:520px;border-top:1px solid #333;padding-top:8px;">
+  ${document.getElementById('f-mentions').value}
+</div>` : '';
+
+  return {
+    prenom:   document.getElementById('f-prenom').value,
+    nom:      document.getElementById('f-nom').value,
+    poste:    document.getElementById('f-poste').value,
+    company:  document.getElementById('f-company').value,
+    email:    document.getElementById('f-email').value,
+    tel:      document.getElementById('f-tel').value,
+    mobile:   document.getElementById('f-mobile').value,
+    website:  document.getElementById('f-website').value,
+    adresse:  document.getElementById('f-adresse').value,
+    socials:  socialsObj,
+    bannerBg, bannerColor, bannerText, bannerLink,
+    bannerHTML, mentionsHTML,
+  };
+}
+
+function buildSig() { return TEMPLATES[currentTpl].build(getData()); }
+
+// ── RENDER PREVIEW ───────────────────────────────────────────────
+function render() {
+  const sig = buildSig();
+  const area = document.getElementById('preview-area');
+
+  if (currentTab === 'preview') {
+    area.innerHTML = `
+      <div class="email-mock">
+        <div class="em-topbar">
+          <div class="em-dot" style="background:#FF5F57"></div>
+          <div class="em-dot" style="background:#FEBC2E"></div>
+          <div class="em-dot" style="background:#28C840"></div>
+        </div>
+        <div class="em-header">
+          <div class="em-from">De : <b>${document.getElementById('f-prenom').value} ${document.getElementById('f-nom').value}</b> &lt;${document.getElementById('f-email').value}&gt;</div>
+          <div class="em-subject">Re: Visite de vos bureaux flex — Confirmation</div>
+        </div>
+        <div class="em-body">
+          Bonjour,<br><br>
+          Merci pour votre intérêt. Je vous confirme notre rendez-vous de demain à 10h00 pour la visite de nos espaces.<br><br>
+          N'hésitez pas à me contacter si vous avez des questions.<br><br>
+          Bien cordialement,
+        </div>
+        <div class="em-divider"></div>
+        <div class="em-sig">${sig}</div>
+      </div>`;
+  } else if (currentTab === 'sig') {
+    area.innerHTML = `
+      <div style="background:#fff;border-radius:10px;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,.4);">
+        ${sig}
+      </div>`;
+  } else if (currentTab === 'code') {
+    const clean = sig.replace(/\n\s+/g,' ').replace(/\s+/g,' ').trim();
+    area.innerHTML = `
+      <div class="code-view">
+        <div class="code-header">
+          <div class="code-label">HTML de la signature</div>
+          <button class="btn btn-copy btn-sm" onclick="copyHTML()">⎘ Copier</button>
+        </div>
+        <div class="code-body"><pre id="code-pre">${escHtml(clean)}</pre></div>
+      </div>`;
+  } else if (currentTab === 'install') {
+    area.innerHTML = `
+      <div class="install-card">
+        <div class="install-title">Gmail</div>
+        ${[
+          ['Copier la signature', 'Cliquez sur <b>✦ Copier la signature</b> en haut à droite.'],
+          ['Ouvrir les paramètres', 'Dans Gmail : <b>⚙ Paramètres → Voir tous les paramètres → Général</b>'],
+          ['Section Signature', 'Faites défiler jusqu\'à <b>Signature</b>, cliquez sur <b>Créer</b>.'],
+          ['Coller', 'Collez avec <b>Ctrl+V</b> (ou ⌘V). Cliquez sur <b>Enregistrer les modifications</b>.'],
+        ].map(([t,c],i)=>`
+          <div class="install-step">
+            <div class="install-num">${i+1}</div>
+            <div class="install-text"><b>${t}</b><br>${c}</div>
+          </div>`).join('')}
+      </div>
+      <div class="install-card">
+        <div class="install-title">Outlook</div>
+        ${[
+          ['Copier la signature', 'Cliquez sur <b>✦ Copier la signature</b> en haut.'],
+          ['Paramètres Outlook', '<b>Fichier → Options → Courrier → Signatures</b>'],
+          ['Nouveau', 'Cliquez sur <b>Nouveau</b>, nommez votre signature.'],
+          ['Coller', 'Dans la zone d\'édition, faites <b>Ctrl+V</b> pour coller.'],
+        ].map(([t,c],i)=>`
+          <div class="install-step">
+            <div class="install-num">${i+1}</div>
+            <div class="install-text"><b>${t}</b><br>${c}</div>
+          </div>`).join('')}
+      </div>
+      <div class="install-card">
+        <div class="install-title">Apple Mail</div>
+        ${[
+          ['Copier', 'Cliquez sur <b>✦ Copier la signature</b>.'],
+          ['Préférences', '<b>Mail → Préférences → Signatures</b>'],
+          ['Ajouter', 'Cliquez sur <b>+</b>, décochez "Toujours faire correspondre ma couleur de police par défaut".'],
+          ['Coller', 'Collez dans la zone de texte avec <b>⌘V</b>.'],
+        ].map(([t,c],i)=>`
+          <div class="install-step">
+            <div class="install-num">${i+1}</div>
+            <div class="install-text"><b>${t}</b><br>${c}</div>
+          </div>`).join('')}
+      </div>`;
+  }
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.preview-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  render();
+}
+
+
+
+// ── COPY ─────────────────────────────────────────────────────────
+async function copySig() {
+  const sig = buildSig();
+  try {
+    await navigator.clipboard.write([
+      new ClipboardItem({ 'text/html': new Blob([sig], { type: 'text/html' }), 'text/plain': new Blob([sig], { type: 'text/plain' }) })
+    ]);
+  } catch {
+    const ta = document.createElement('textarea');
+    ta.value = sig; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+  }
+  showToast('✓ Signature copiée — collez-la dans Gmail ou Outlook');
+}
+
+async function copyHTML() {
+  const sig = buildSig().replace(/\n\s+/g,' ').replace(/\s+/g,' ').trim();
+  try { await navigator.clipboard.writeText(sig); } catch { }
+  showToast('✓ Code HTML copié');
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function resetForm() {
+  document.getElementById('f-prenom').value = 'Marie';
+  document.getElementById('f-nom').value = 'Dupont';
+  document.getElementById('f-poste').value = 'Responsable de Site';
+  document.getElementById('f-company').value = 'Deskeo';
+  document.getElementById('f-email').value = 'm.dupont@deskeo.fr';
+  document.getElementById('f-tel').value = '+33 1 23 45 67 89';
+  document.getElementById('f-mobile').value = '';
+  document.getElementById('f-website').value = 'www.deskeo.fr';
+  document.getElementById('f-adresse').value = '35 rue du Sentier, 75002 Paris';
+  document.getElementById('c-primary').value = '#0F1B35';
+  document.getElementById('c-accent').value = '#C8A84B';
+  currentTpl = 0;
+  render();
+}
+
+// ── INIT ─────────────────────────────────────────────────────────
+renderSocialToggles();
+renderTemplateSidebar();
+render();
+
+// Live update template sidebar on any input
+document.querySelectorAll('input, select, textarea').forEach(el => {
+  el.addEventListener('input', () => { renderTemplateSidebar(); });
+  el.addEventListener('change', () => { renderTemplateSidebar(); });
+});
+</script>
+</body>
+</html>
